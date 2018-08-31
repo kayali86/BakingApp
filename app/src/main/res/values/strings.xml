@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">Baking App</string>
+
+    <!-- MainActivity Strings -->
+    <string name="main_activity_label">Baking Time</string>
+
+    <!-- RecipeDetailActivity Strings -->
+    <string name="last_step_toast_message">This is the last step.</string>
+    <string name="first_step_toast_message">This is the first step.</string>
+
+    <!-- RecipeFragment Strings -->
+    <string name="recipe_ingredients_header">Recipe Ingredients</string>
+
+    <!-- Ingredients Fragment Strings -->
+    <string name="ingredients_header">Ingredient</string>
+    <string name="ingredients_header_quantity">Quantity</string>
+
+    <!-- StepFragment Strings -->
+    <string name="pause_btn_notification">Pause</string>
+    <string name="play_btn_notification">Play</string>
+    <string name="restart_btn_notification">Restart</string>
+    <string name="next_btn">Next</string>
+    <string name="previous_btn">Previous</string>
+
+    <!-- Recipe list item Strings -->
+    <string name="recipe_number">Recipe Number: </string>
+    <string name="recipe_number_land">Recipe Nr: </string>
+    <string name="recipe_servings">Servings: </string>
+    <string name="logo_content_description">cup cake logo</string>
+
+    <!-- Recipe list item Strings -->
+    <string name="step_list_item_header">Step </string>
+
+    <!-- Empty View Titles -->
+    <string name="empty_view_title_text">You do not have any Recipe!</string>
+    <string name="empty_view_subtitle_text">An error has occurred.</string>
+    <string name="empty_view_content_description">No data to display.</string>
+
+    <!-- Widget Strings -->
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="widget_previous_arrow_content_description">Previous arrow</string>
+    <string name="widget_next_arrow_content_description">Next arrow</string>
+    <string name="widget_number_label">Nr: </string>
+    <string name="widget_servings_label">Servings: </string>
+
+    <!-- Menus Strings -->
+    <string name="menu_action_back">Back</string>
+</resources>

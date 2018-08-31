@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/normal_margin"
+        android:layout_marginStart="@dimen/normal_margin"
+        android:layout_marginTop="@dimen/normal_margin"
+        android:background="@drawable/recipe_selector"
+        android:paddingBottom="@dimen/normal_margin">
+
+        <ImageView
+            android:id="@+id/iv_cupcake_logo"
+            style="@style/recipe_list_item_logo"
+            android:src="@drawable/ic_cupcake"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/recipe_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/normal_margin"
+            android:layout_marginStart="@dimen/normal_margin"
+            app:layout_constraintBottom_toTopOf="@+id/iv_cupcake_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_cupcake_logo"
+            app:layout_constraintTop_toBottomOf="@+id/iv_cupcake_logo">
+
+            <TextView
+                android:id="@+id/tv_recipe_name"
+                style="@style/recipe_list_item_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Title" />
+
+            <TextView
+                android:id="@+id/tv_recipe_id_label"
+                style="@style/recipe_list_item_primary_text"
+                android:text="@string/recipe_number"
+                app:layout_constraintStart_toStartOf="@+id/tv_recipe_name"
+                app:layout_constraintTop_toBottomOf="@+id/tv_recipe_name" />
+
+            <TextView
+                android:id="@+id/tv_recipe_id"
+                style="@style/recipe_list_item_secondary_text"
+                app:layout_constraintStart_toEndOf="@+id/tv_recipe_id_label"
+                app:layout_constraintTop_toBottomOf="@+id/tv_recipe_name"
+                tools:text="1234" />
+
+            <TextView
+                android:id="@+id/tv_recipe_servings_label"
+                style="@style/recipe_list_item_primary_text"
+                android:text="@string/recipe_servings"
+                app:layout_constraintEnd_toStartOf="@+id/tv_recipe_servings"
+                app:layout_constraintTop_toBottomOf="@+id/tv_recipe_name" />
+
+            <TextView
+                android:id="@+id/tv_recipe_servings"
+                style="@style/recipe_list_item_secondary_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_recipe_name"
+                tools:text="8" />
+        </android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+</layout>
