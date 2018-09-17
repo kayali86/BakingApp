@@ -23,7 +23,6 @@
         android:layout_marginEnd="0dp"
         android:layout_marginStart="0dp"
         android:layout_weight="1"
-        android:gravity="center"
         android:orientation="vertical">
 
         <TextView
@@ -34,32 +33,29 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:orientation="horizontal">
 
             <TextView
-                style="@style/single_widget_secondary_text"
-                android:text="@string/widget_number_label" />
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="@string/ingredients_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
 
             <TextView
-                android:id="@+id/tv_recipe_nr"
-                style="@style/single_widget_normal_text" />
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginStart="@dimen/normal_margin"
+                android:text="@string/ingredients_header_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
-
-        <LinearLayout
+        <ListView
+            android:id="@+id/recipe_widget_listview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"/>
 
-            <TextView
-                style="@style/single_widget_secondary_text"
-                android:text="@string/widget_servings_label" />
-
-            <TextView
-                android:id="@+id/tv_recipe_servings"
-                style="@style/single_widget_normal_text" />
-        </LinearLayout>
     </LinearLayout>
 
     <ImageView

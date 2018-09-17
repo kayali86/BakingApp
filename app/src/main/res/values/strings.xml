@@ -46,4 +46,9 @@
 
     <!-- Menus Strings -->
     <string name="menu_action_back">Back</string>
+
+    <!-- Toast messages Strings -->
+    <string name="no_internet">No Internet connection</string>
+    <string name="loading_canceled">Loading Data canceled</string>
+    <string name="no_data_to_display">No data to display</string>
 </resources>

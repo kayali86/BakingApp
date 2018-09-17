@@ -3,21 +3,77 @@ package com.kayali_developer.bakingapp.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
+public class Recipe implements Parcelable, IGson
+{
 
-public class Recipe implements Parcelable {
+    @SerializedName("id")
+    @Expose
     private int id;
+    @SerializedName("name")
+    @Expose
     private String name;
+    @SerializedName("ingredients")
+    @Expose
     private List<Ingredient> ingredients = new ArrayList<>();
+    @SerializedName("steps")
+    @Expose
     private List<Step> steps = new ArrayList<>();
+    @SerializedName("servings")
+    @Expose
     private int servings;
+    @SerializedName("image")
+    @Expose
     private String image;
+    public final static Parcelable.Creator<Recipe> CREATOR = new Creator<Recipe>() {
 
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        public Recipe[] newArray(int size) {
+            return (new Recipe[size]);
+        }
+
+    }
+            ;
+
+    protected Recipe(Parcel in) {
+        this.id = ((Integer) in.readValue((int.class.getClassLoader())));
+        this.name = ((String) in.readValue((String.class.getClassLoader())));
+        in.readList(this.ingredients, (com.kayali_developer.bakingapp.data.model.Ingredient.class.getClassLoader()));
+        in.readList(this.steps, (com.kayali_developer.bakingapp.data.model.Step.class.getClassLoader()));
+        this.servings = ((Integer) in.readValue((int.class.getClassLoader())));
+        this.image = ((String) in.readValue((String.class.getClassLoader())));
+    }
+
+    /**
+     * No args constructor for use in serialization
+     *
+     */
     public Recipe() {
     }
 
+    /**
+     *
+     * @param ingredients
+     * @param id
+     * @param servings
+     * @param name
+     * @param image
+     * @param steps
+     */
     public Recipe(int id, String name, List<Ingredient> ingredients, List<Step> steps, int servings, String image) {
+        super();
         this.id = id;
         this.name = name;
         this.ingredients = ingredients;
@@ -25,16 +81,6 @@ public class Recipe implements Parcelable {
         this.servings = servings;
         this.image = image;
     }
-
-    protected Recipe(Parcel in) {
-        this.id = ((int) in.readValue((int.class.getClassLoader())));
-        this.name = ((String) in.readValue((String.class.getClassLoader())));
-        in.readTypedList(this.ingredients, (Ingredient.CREATOR));
-        in.readTypedList(this.steps, (Step.CREATOR));
-        this.servings = ((int) in.readValue((int.class.getClassLoader())));
-        this.image = ((String) in.readValue((String.class.getClassLoader())));
-    }
-
 
     public int getId() {
         return id;
@@ -84,29 +130,21 @@ public class Recipe implements Parcelable {
         this.image = image;
     }
 
-    public final static Parcelable.Creator<Recipe> CREATOR = new Creator<Recipe>() {
-        @SuppressWarnings({
-                "unchecked"
-        })
-        public Recipe createFromParcel(Parcel in) {
-            return new Recipe(in);
-        }
-
-        public Recipe[] newArray(int size) {
-            return (new Recipe[size]);
-        }
-    };
-
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(id);
         dest.writeValue(name);
-        dest.writeTypedList(ingredients);
-        dest.writeTypedList(steps);
+        dest.writeList(ingredients);
+        dest.writeList(steps);
         dest.writeValue(servings);
         dest.writeValue(image);
     }
 
     public int describeContents() {
         return 0;
+    }
+
+    @Override
+    public String toJson() {
+        return new Gson().toJson(this);
     }
 }

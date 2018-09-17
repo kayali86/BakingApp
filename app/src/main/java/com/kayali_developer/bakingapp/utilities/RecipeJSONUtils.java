@@ -37,8 +37,7 @@ public class RecipeJSONUtils {
     }
 
     // Extract data Strings and return a list of "Recipe"
-    public static List<Recipe> extractRecipesData(String stringUrl) {
-        String jsonResponse = fetchResponse(stringUrl);
+    public static List<Recipe> extractRecipesData(String jsonResponse) {
         if (jsonResponse == null) {
             return null;
         }
@@ -63,7 +62,7 @@ public class RecipeJSONUtils {
                 for (int j = 0; j < ingredientsJSONArray.length(); j++) {
                     Ingredient currentRecipeIngredient = new Ingredient();
                     JSONObject currentIngredientsJSON = ingredientsJSONArray.getJSONObject(j);
-                    int quantity = currentIngredientsJSON.optInt(QUANTITY_KEY);
+                    float quantity = currentIngredientsJSON.optInt(QUANTITY_KEY);
                     String measure = currentIngredientsJSON.optString(MEASURE_KEY);
                     String ingredient = currentIngredientsJSON.optString(INGREDIENT_KEY);
                     currentRecipeIngredient.setQuantity(quantity);
@@ -94,17 +93,5 @@ public class RecipeJSONUtils {
             e.printStackTrace();
         }
         return recipes;
-    }
-
-    // Fetch a JSON response using API Url
-    private static String fetchResponse(String stringUrl) {
-        URL url = RecipeNetworkUtils.createUrl(stringUrl);
-        String jsonResponse = null;
-        try {
-            jsonResponse = RecipeNetworkUtils.getResponseFromHttpUrl(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return jsonResponse;
     }
 }

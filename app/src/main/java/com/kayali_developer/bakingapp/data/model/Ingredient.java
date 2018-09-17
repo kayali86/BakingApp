@@ -3,31 +3,72 @@ package com.kayali_developer.bakingapp.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Ingredient implements Parcelable {
-    private Integer quantity;
-    private String measure;
-    private String ingredient;
+import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
+public class Ingredient implements Parcelable, IGson
+{
+
+    @SerializedName("quantity")
+    @Expose
+    private Float quantity;
+    @SerializedName("measure")
+    @Expose
+    private String measure;
+    @SerializedName("ingredient")
+    @Expose
+    private String ingredient;
+    public final static Parcelable.Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Ingredient createFromParcel(Parcel in) {
+            return new Ingredient(in);
+        }
+
+        public Ingredient[] newArray(int size) {
+            return (new Ingredient[size]);
+        }
+
+    }
+            ;
+
+    protected Ingredient(Parcel in) {
+        this.quantity = ((Float) in.readValue((Float.class.getClassLoader())));
+        this.measure = ((String) in.readValue((String.class.getClassLoader())));
+        this.ingredient = ((String) in.readValue((String.class.getClassLoader())));
+    }
+
+    /**
+     * No args constructor for use in serialization
+     *
+     */
     public Ingredient() {
     }
 
-    public Ingredient(Integer quantity, String measure, String ingredient) {
+    /**
+     *
+     * @param measure
+     * @param ingredient
+     * @param quantity
+     */
+    public Ingredient(Float quantity, String measure, String ingredient) {
+        super();
         this.quantity = quantity;
         this.measure = measure;
         this.ingredient = ingredient;
     }
 
-    private Ingredient(Parcel in) {
-        this.quantity = ((Integer) in.readValue((Integer.class.getClassLoader())));
-        this.measure = ((String) in.readValue((String.class.getClassLoader())));
-        this.ingredient = ((String) in.readValue((String.class.getClassLoader())));
-    }
-
-    public Integer getQuantity() {
+    public Float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(Float quantity) {
         this.quantity = quantity;
     }
 
@@ -47,19 +88,6 @@ public class Ingredient implements Parcelable {
         this.ingredient = ingredient;
     }
 
-    public final static Parcelable.Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
-        @SuppressWarnings({
-                "unchecked"
-        })
-        public Ingredient createFromParcel(Parcel in) {
-            return new Ingredient(in);
-        }
-
-        public Ingredient[] newArray(int size) {
-            return (new Ingredient[size]);
-        }
-    };
-
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(quantity);
         dest.writeValue(measure);
@@ -68,5 +96,10 @@ public class Ingredient implements Parcelable {
 
     public int describeContents() {
         return 0;
+    }
+
+    @Override
+    public String toJson() {
+        return new Gson().toJson(this);
     }
 }

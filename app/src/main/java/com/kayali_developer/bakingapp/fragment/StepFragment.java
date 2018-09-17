@@ -19,6 +19,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,9 +65,13 @@ public class StepFragment extends Fragment implements Player.EventListener {
     // An interface to implement onNextClicked and onPreviousClicked functions
     private NextPreviousClickListener nextPreviousClickListener;
 
+    private boolean mPlayWhenReady = true;
+    private long mCurrentVideoPosition = -1;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.w(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>onCreate");
         mTwoPane = getArguments().getBoolean(AppConstants.TWO_PANE_KEY);
         if (!mTwoPane) {
             int orientation = getResources().getConfiguration().orientation;
@@ -87,6 +92,12 @@ public class StepFragment extends Fragment implements Player.EventListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         stepBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_step, container, false);
         View view = stepBinding.getRoot();
+        if (savedInstanceState != null && savedInstanceState.containsKey(AppConstants.CURRENT_VIDEO_POSITION)) {
+            Log.w(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>onCreateView savedInstanceState.containsKey CURRENT_VIDEO_POSITION");
+            mCurrentVideoPosition = savedInstanceState.getLong(AppConstants.CURRENT_VIDEO_POSITION);
+            mPlayWhenReady = savedInstanceState.getBoolean(AppConstants.PLAY_WHEN_READY);
+        }
+
         currentRecipe = getArguments().getParcelable(AppConstants.CURRENT_RECIPE_PARCELABLE_KEY);
         stepPosition = getArguments().getInt(AppConstants.CURRENT_STEP_POSITION_KEY);
         currentStep = currentRecipe.getSteps().get(stepPosition);
@@ -122,6 +133,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
     // An interface to implement onNextClicked and onPreviousClicked functions
     public interface NextPreviousClickListener {
         void onNextClicked();
+
         void onPreviousClicked();
     }
 
@@ -203,6 +215,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
     // Helper method to initialize ExoPlayer
     private void initializePlayer(Uri mediaUri) {
         if (mExoPlayer == null) {
+            Log.w(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>initializePlayer mExoPlayer not null");
             // Create an instance of the ExoPlayer.
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
@@ -215,16 +228,34 @@ public class StepFragment extends Fragment implements Player.EventListener {
             String userAgent = Util.getUserAgent(getActivity(), getString(R.string.app_name));
             MediaSource mediaSource = new ExtractorMediaSource.Factory(new DefaultDataSourceFactory(getContext(), userAgent)).createMediaSource(mediaUri);
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+            if (mCurrentVideoPosition != -1) {
+                Log.w(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>initializePlayer mCurrentVideoPosition not -1");
+                Log.w(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + mCurrentVideoPosition);
+                Log.w(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + mPlayWhenReady);
+                mExoPlayer.seekTo(mCurrentVideoPosition);
+                mExoPlayer.setPlayWhenReady(mPlayWhenReady);
+            }else{
+                mExoPlayer.setPlayWhenReady(true);
+            }
         }
     }
 
     // Helper method to release ExoPlayer and notification
     private void releasePlayer() {
+        Log.w(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>releasePlayer");
         if (mNotificationManager != null) {
             mNotificationManager.cancelAll();
         }
         if (mExoPlayer != null) {
+            Log.w(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>releasePlayer mExoPlayer not null");
+            try {
+                mPlayWhenReady = mExoPlayer.getPlayWhenReady();
+                Log.w(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + mPlayWhenReady);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+            mCurrentVideoPosition = mExoPlayer.getCurrentPosition();
+            Log.w(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + mCurrentVideoPosition);
             mExoPlayer.stop();
             mExoPlayer.release();
             mExoPlayer = null;
@@ -309,8 +340,9 @@ public class StepFragment extends Fragment implements Player.EventListener {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onPause() {
+        super.onPause();
+        Log.w(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>onPause");
         // Release ExoPlayer and disable mediaSession when activity is destroyed
         releasePlayer();
         mMediaSession.setActive(false);
@@ -319,7 +351,23 @@ public class StepFragment extends Fragment implements Player.EventListener {
     @Override
     public void onResume() {
         super.onResume();
+        Log.w(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>onResume");
         // Set new title in actionBar
         getActivity().setTitle(currentStep.getShortDescription());
+        if (mExoPlayer == null){
+            if (currentStep.getVideoURL() != null && !TextUtils.isEmpty(currentStep.getVideoURL())) {
+                Uri videoUri = Uri.parse(currentStep.getVideoURL());
+                initializePlayer(videoUri);
+            }
+
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        Log.w(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>onSaveInstanceState");
+        outState.putBoolean(AppConstants.PLAY_WHEN_READY, mPlayWhenReady);
+        outState.putLong(AppConstants.CURRENT_VIDEO_POSITION, mCurrentVideoPosition);
+        super.onSaveInstanceState(outState);
     }
 }

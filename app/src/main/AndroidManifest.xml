@@ -43,8 +43,7 @@
         <!-- Intent service to load data for the widget -->
         <service android:name=".widget.WidgetRecipeLoadService" />
         <!-- RemoteViewsService for grid view Widget -->
-        <service
-            android:name=".widget.GridWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service android:name=".widget.WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
     </application>
 </manifest>
